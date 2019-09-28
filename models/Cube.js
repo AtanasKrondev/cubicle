@@ -17,6 +17,10 @@ class CubeModel {
         });
     }
 
+    create(name, description, imageUrl, difficultyLevel) {
+        return { name, description, imageUrl, difficultyLevel };
+    }
+
     insert(newCube) {
         const newIndex = ++this.data.lastIndex;
         newCube = { id: newIndex, ...newCube };
