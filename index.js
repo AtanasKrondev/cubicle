@@ -1,10 +1,26 @@
-const env = process.env.NODE_ENV || 'development';
 global.__basedir = __dirname;
+const dbConnector = require('./config/db');
+dbConnector().then(() => {
+    const config = require('./config/config');
+    const app = require('express')();
+    require('./config/express')(app);
+    require('./config/routes')(app);
 
-const config = require('./config/config')[env];
-const app = require('express')();
+    app.listen(config.port, console.log(`Listening on port ${config.port}! Now its up to you...`));
+})
+    .catch(console.error);
 
-require('./config/express')(app);
-require('./config/routes')(app);
+// const dbUrl = 'mongodb://localhost:27017';
+// const { MongoClient } = require('mongodb');
+// const client = new MongoClient(dbUrl);
+// client.connect(function (err) {
+//     if (err) {
+//         console.error(err); return;
+//     }
 
-app.listen(config.port, console.log(`Listening on port ${config.port}! Now its up to you...`));
+//     const db = client.db('testdb');
+//     const users = db.collection('users');
+//     // users.insert({ name: 'Test' }).then(user => { console.log(user) });
+//     users.deleteMany({ name: 'Test' }).then(deledet => console.log(deledet))
+// });
+
