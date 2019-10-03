@@ -1,38 +1,37 @@
 const cubeModel = require('../models/cube');
 
 function index(req, res, next) {
-    // const { from, to, search } = req.query;
-    // const findFn = item => {
-    //     let result = true;
-    //     if (search) {
-    //         result = item.name.toLowerCase().includes(search.toLowerCase());
-    //     }
-    //     if (result && from) {
-    //         result = +item.difficultyLevel >= +from;
-    //     }
+    const { from, to, search } = req.query;
+    let query = {
+        name: new RegExp(search, 'i'),
+    }
 
-    //     if (result && to) {
-    //         result = +item.difficultyLevel <= +to;
-    //     }
-    //     return result;
-    // }
-    cubeModel.find()
+    if (from || to) {
+        query.difficultyLevel = {};
+        if (from) {
+            query.difficultyLevel.$gte = from;
+        }
+        if (to) {
+            query.difficultyLevel.$lte = to;
+        }
+    }
+    cubeModel.find(query)
         .then(cubes => {
             res.render('index.hbs', {
                 cubes,
-                // search,
-                // from,
-                // to,
+                search,
+                from,
+                to,
             });
         })
         .catch(next);
 };
 
 function details(req, res, next) {
-    const id = +req.params.id;
-    cubeModel.getOne(id)
+    const id = req.params.id;
+    cubeModel.findById(id)
         .then(found => {
-            const cube = found[0]
+            const cube = found;
             if (!cube) {
                 res.redirect('/not-found');
                 return;
@@ -55,11 +54,16 @@ function createGet(req, res) {
 }
 
 function createPost(req, res) {
-    const { name, description, imageUrl, difficultyLevel } = req.body;
-    const newCube = cubeModel.create(name, description, imageUrl, difficultyLevel);
-    cubeModel.insert(newCube)
-        .then(() => {
+    let { name, description, imageUrl, difficultyLevel } = req.body;
+    difficultyLevel = +difficultyLevel;
+    cubeModel.create({ name, description, imageUrl, difficultyLevel })
+        .then((cube) => {
+            console.log(cube);
             res.redirect('/');
+        })
+        .catch(err => {
+            console.log(err);
+            res.redirect('/create');
         });
 }
 
