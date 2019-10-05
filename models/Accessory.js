@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const cubeSchema = new mongoose.Schema({
+const accesorySchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -13,19 +13,11 @@ const cubeSchema = new mongoose.Schema({
     },
     description: { type: String, required: true },
     imageUrl: { type: String, required: true },
-    difficultyLevel: {
-        type: Number,
-        required: true,
-        validate: {
-            validator: (v) => v >= 1 && v <= 6,
-            message: props => `${props.value} is not a valid difficulty! Value must be between 1 and 6!`,
-        },
-    },
-    accessories: [{ type: mongoose.Types.ObjectId, ref: 'Accessory' }],
+    cubes: [{ type: mongoose.Types.ObjectId, ref: 'Cube' }],
 })
 
-cubeSchema.methods.getDescription = function () {
+accesorySchema.methods.getDescription = function () {
     return this.description;
 }
 
-module.exports = mongoose.model('Cube', cubeSchema);
+module.exports = mongoose.model('Accessory', accesorySchema);

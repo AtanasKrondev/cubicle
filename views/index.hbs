@@ -15,6 +15,7 @@
         <li><img class="logo" src="/images/logo.png"></li>
         <li><a href="/">Browse</a></li>
         <li><a href="/create">Add a Cube</a></li>
+        <li><a href="/create/accessory">Add Accessory</a></li>
         <li><a href="/about">About</a></li>
       </ul>
     </header>
@@ -34,23 +35,9 @@
         <p class="name">{{name}}</p>
         <p><span>Difficulty level:</span> {{difficultyLevel}}</p>
         <a class="btn" href="/details/{{id}}">Details</a>
+        <a class="btn" href="/attach/accessory/{{id}}">Attach</a>
       </div>
       {{/each}}
-
-      {{!-- 
-      <div class="cube">
-        <img class="cube" src="https://images-na.ssl-images-amazon.com/images/I/61izOzq%2BBAL._SY355_.jpg">
-        <p class="name">Pyraminx</p>
-        <p><span>Difficulty level:</span> 1</p>
-        <a class="btn" href="/details/5c3a6888f78d6638ec8fdad6">Details</a>
-      </div>
-      <div class="cube">
-        <img class="cube" src="https://images-na.ssl-images-amazon.com/images/I/61HpQqVQ37L._SY355_.jpg">
-        <p class="name">Megaminx</p>
-        <p><span>Difficulty level:</span> 3</p>
-        <a class="btn" href="/details/5c3a68d9f78d6638ec8fdad7">Details</a>
-      </div> --}}
-
     </main>
   </div>
   <footer>@Cubicle: Exercise for Express.js and Handlebars</footer>

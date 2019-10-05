@@ -1,4 +1,4 @@
-const cubeModel = require('../models/cube');
+const { cubeModel } = require('../models');
 
 function index(req, res, next) {
     const { from, to, search } = req.query;
@@ -29,7 +29,7 @@ function index(req, res, next) {
 
 function details(req, res, next) {
     const id = req.params.id;
-    cubeModel.findById(id)
+    cubeModel.findById(id).populate('accessories')
         .then(found => {
             const cube = found;
             if (!cube) {
@@ -58,7 +58,6 @@ function createPost(req, res) {
     difficultyLevel = +difficultyLevel;
     cubeModel.create({ name, description, imageUrl, difficultyLevel })
         .then((cube) => {
-            console.log(cube);
             res.redirect('/');
         })
         .catch(err => {
