@@ -15,11 +15,14 @@
                 <li><img class="logo" src="/images/logo.png"></li>
                 <li><a href="/about">About</a></li>
                 <li><a href="/">Browse</a></li>
+                {{#if user}}
                 <li><a href="/create">Add a Cube</a></li>
                 <li><a href="/create/accessory">Add Accessory</a></li>
                 <li><a href="/logout">Logout</a></li>
+                {{else}}
                 <li><a href="/login">Login</a></li>
                 <li><a href="/register">Register</a></li>
+                {{/if}}
             </ul>
         </header>
         <main>
@@ -28,6 +31,10 @@
             <div class="details">
                 <p><span>Description:</span> {{cube.description}}</p>
                 <p><span>Difficulty level:</span> {{cube.difficultyLevel}}</p>
+                {{#if user}}
+                <a class="btn" href="/edit/{{cube._id}}">Edit</a>
+                <a class="btn" href="/delete/{{cube._id}}">Delete</a>
+                {{/if}}
                 <a class="btn" href="/">Back</a>
             </div>
             <h2>Accessories</h2>
@@ -41,12 +48,6 @@
                 {{else}}
                 <h3 class="italic">This cube has no accessories yet...</h3>
                 {{/each}}
-                {{!-- <div class="accessory">
-                    <img src="https://images-na.ssl-images-amazon.com/images/I/61J8UP8pySL._SX425_.jpg"
-                        alt="stickerName">
-                    <h3>Accessory Name</h3>
-                    <p>Accessory Description</p>
-                </div> --}}
             </div>
         </main>
     </div>

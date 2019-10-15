@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Attach Accessory</title>
+    <title>Page Not Found</title>
     <link href="/css/site.css" type="text/css" rel="stylesheet">
     <link rel='shortcut icon' type='image/x-icon' href='/images/favicon.png' />
 </head>
@@ -26,18 +26,11 @@
             </ul>
         </header>
         <main>
-            <h1>Create Accessory</h1>
-            <div class="form">
-                <form action='/create/accessory' method="POST">
-                    <label for="name">Name</label>
-                    <input type="text" id="name" name="name">
-                    <label for="name">Description</label>
-                    <textarea id="name" name="description"></textarea>
-                    <label for="image">ImageUrl</label>
-                    <input type="text" id="image" name="imageUrl">
-                    <input type="submit" value="Create">
-                </form>
-            </div>
+            <img id="sadFaceImg"
+                src="https://imageog.flaticon.com/icons/png/512/42/42901.png?size=1200x630f&pad=10,10,10,10&ext=png&bg=FFFFFFFF"
+                alt="sad face" />
+            <h1>500</h1>
+            <h2>{{ errorMessage }}</h2>
         </main>
     </div>
     <footer>@Cubicle: Exercise for Express.js and Handlebars</footer>

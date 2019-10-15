@@ -7,7 +7,7 @@ const secret = 'tainimakari';
 
 module.exports = (app) => {
     app.use(express.urlencoded({ extended: false }));
-    app.use(cookieParser(secret))
+    app.use(cookieParser(secret));
     app.use(express.static(path.resolve(__basedir, 'static')));
     app.engine('.hbs', handlebars({ extName: '.hbs', defaultLayout: false }));
     app.set('views', path.resolve(__basedir, 'views'));
