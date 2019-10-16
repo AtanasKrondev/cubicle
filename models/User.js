@@ -1,25 +1,32 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
-const salt = 'tainimakari';
 
 const userSchema = new mongoose.Schema({
     username: {
         type: String,
         required: true,
         unique: true,
+        minlength: [5, 'Username must be at least 5 characters long!'],
         validate: {
-            validator: function (v) {
-                return v.length >= 2 && v.length <= 20;
+            validator: (v) => {
+                return /[a-zA-Z0-9]+/.test(v)
             },
-            message: props => `${props.value} is not a valid username! Length must be between 2 and 20 symbols!`,
+            message: props => `${props.value} is not a valid username!`,
         }
     },
     password: {
         type: String,
-        required: true
-    }
-})
+        required: true,
+        minlength: [8, 'Password must be at least 8 characters long!'],
+        validate: {
+            validator: (v) => {
+                return /[a-zA-Z0-9]+/.test(v)
+            },
+            message: props => `${props.value} is not a valid password!`,
+        },
+    },
+});
 
 userSchema.methods = {
     matchPassword: function (password) {

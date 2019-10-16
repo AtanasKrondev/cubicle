@@ -2,32 +2,37 @@ const { userModel } = require('../models');
 const { jwt } = require('../utils');
 const { authCookieName } = require('../app-config');
 const { tokenBlacklist } = require('../models');
+const { validationResult } = require('express-validator');
 
 function registerGet(req, res) {
     res.render('register.hbs');
 }
 
 function registerPost(req, res, next) {
+    let result;
+    const errors = validationResult(req);
     const { username, password, repeatPassword } = req.body;
-    if (password !== repeatPassword) {
-        res.render('register.hbs', {
-            errors: {
-                repeatPassword: 'Password and repeat password don\'t match!'
-            }
-        });
-        return;
+    if (!errors.isEmpty()) {
+        result = Promise.reject({ name: 'ValidationError', errors: errors.errors[0].msg });
+    } else {
+        result = userModel.create({ username, password });
     }
+    // if (password !== repeatPassword) {
+    //     res.render('register.hbs', {
+    //         errors: {
+    //             repeatPassword: 'Password and repeat password don\'t match!'
+    //         }
+    //     });
+    //     return;
+    // }
 
-    return userModel.create({ username, password })
-        .then(() => {
-            res.redirect('/login');
-        })
+    return result.then(() => {
+        res.redirect('/login');
+    })
         .catch(err => {
-            if (err.name === 'MongoError' && err.code === 11000) {
+            if (err.name === 'ValidationError') {
                 res.render('register.hbs', {
-                    errors: {
-                        username: 'Username already taken!'
-                    }
+                    errors: err.errors,
                 });
                 return;
             }
