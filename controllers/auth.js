@@ -5,43 +5,42 @@ const { tokenBlacklist } = require('../models');
 const { validationResult } = require('express-validator');
 
 function registerGet(req, res) {
-    res.render('register.hbs');
+    res.render('register');
 }
 
 function registerPost(req, res, next) {
+    const { username, password } = req.body;
     let result;
     const errors = validationResult(req);
-    const { username, password, repeatPassword } = req.body;
     if (!errors.isEmpty()) {
-        result = Promise.reject({ name: 'ValidationError', errors: errors.errors[0].msg });
+        result = Promise.reject({ name: 'ValidationError', errors: errors.array().map((a) => a = a.msg) });
     } else {
         result = userModel.create({ username, password });
     }
-    // if (password !== repeatPassword) {
-    //     res.render('register.hbs', {
-    //         errors: {
-    //             repeatPassword: 'Password and repeat password don\'t match!'
-    //         }
-    //     });
-    //     return;
-    // }
 
     return result.then(() => {
         res.redirect('/login');
-    })
-        .catch(err => {
-            if (err.name === 'ValidationError') {
-                res.render('register.hbs', {
-                    errors: err.errors,
-                });
-                return;
-            }
-            next(err);
-        });
-}
+    }).catch(err => {
+        if (err.code === 11000) {
+            res.render('register', {
+                errors: ['Username already taken!'],
+                username
+            });
+            return;
+        }
+        if (err.name === 'ValidationError') {
+            res.render('register', {
+                errors: err.errors,
+                username
+            });
+            return;
+        };
+        next(err);
+    });
+};
 
 function loginGet(req, res) {
-    res.render('login.hbs');
+    res.render('login');
 }
 
 function loginPost(req, res, next) {
@@ -50,12 +49,13 @@ function loginPost(req, res, next) {
         .then(user => Promise.all([user, user.matchPassword(password)]))
         .then(([user, match]) => {
             if (!match) {
-                res.render('login.hbs', { message: 'Wrong password or username!' });
+                res.render('login', { message: 'Wrong password or username!' });
                 return;
             }
             const token = jwt.createToken({ id: user._id });
             res.cookie(authCookieName, token).redirect('/');
-        });
+        })
+        .catch(err => next(err))
 }
 
 function logout(req, res) {

@@ -5,7 +5,7 @@ const saltRounds = 10;
 const userSchema = new mongoose.Schema({
     username: {
         type: String,
-        required: true,
+        required: [true, 'Username is empty!'],
         unique: true,
         minlength: [5, 'Username must be at least 5 characters long!'],
         validate: {
@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true,
+        required: [true, 'Password is empty!'],
         minlength: [8, 'Password must be at least 8 characters long!'],
         validate: {
             validator: (v) => {

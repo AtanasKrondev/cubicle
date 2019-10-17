@@ -1,57 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
+<main>
+  <h1>Register Form</h1>
+  <div class="form">
+    <form action='/register' method="POST">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" value="{{username}}">
 
-<head>
-  <meta charset="UTF-8">
-  <title>Register Page</title>
-  <link href="/css/site.css" type="text/css" rel="stylesheet">
-  <link rel='shortcut icon' type='image/x-icon' href='./images/favicon.png' />
-</head>
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password">
 
-<body>
-  <div class="container">
-    <header>
-      <ul>
-        <li><img class="logo" src="/images/logo.png"></li>
-        <li><a href="/about">About</a></li>
-        <li><a href="/">Browse</a></li>
-        {{#if user}}
-        <li><a href="/create">Add a Cube</a></li>
-        <li><a href="/create/accessory">Add Accessory</a></li>
-        <li><a href="/logout">Logout</a></li>
-        {{else}}
-        <li><a href="/login">Login</a></li>
-        <li><a href="/register">Register</a></li>
-        {{/if}}
-      </ul>
-    </header>
-    {{#if errors}}
-    <div id="notifications">
-      {{#each errors}}
-      <p id="notification-message">{{this}}</p>
-      {{/each}}
-    </div>
-    {{/if}}
-    <main>
-      <h1>Register Form</h1>
-      <div class="form">
-        <form action='/register' method="POST">
-          <label for="username">Username</label>
-          <input type="text" id="username" name="username">
+      <label for="repeatPassword">Re-Password</label>
+      <input type="password" id="repeatPassword" name="repeatPassword">
 
-          <label for="password">Password</label>
-          <input type="password" id="password" name="password">
-
-          <label for="repeatPassword">Re-Password</label>
-          <input type="password" id="repeatPassword" name="repeatPassword">
-
-          <input type="submit" value="Register">
-        </form>
-      </div>
-    </main>
+      <input type="submit" value="Register">
+    </form>
   </div>
-  <footer>@Cubicle: Exercise for Express.js and Handlebars</footer>
-
-</body>
-
-</html>
+</main>

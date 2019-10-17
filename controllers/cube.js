@@ -2,7 +2,7 @@ const { cubeModel } = require('../models');
 
 function index(req, res, next) {
     const { from, to, search } = req.query;
-    const user = req.user;
+    const { user } = req;
     let query = {
         name: new RegExp(search, 'i'),
     }
@@ -18,7 +18,7 @@ function index(req, res, next) {
     }
     cubeModel.find(query)
         .then(cubes => {
-            res.render('index.hbs', {
+            res.render('index', {
                 cubes,
                 search,
                 from,
@@ -39,29 +39,30 @@ function details(req, res, next) {
                 res.redirect('/not-found');
                 return;
             }
-            res.render('details.hbs', { cube, user })
+            res.render('details', { cube, user })
         })
         .catch(next);
 }
 
 function notFound(req, res) {
     const { user } = req;
-    res.render('404.hbs', { user });
+    res.render('404', { user });
 }
 
 function about(req, res) {
     const { user } = req;
-    res.render('about.hbs', { user });
+    res.render('about', { user });
 }
 
 function createGet(req, res) {
-    res.render('create.hbs')
+    const { user } = req;
+    res.render('create', { user })
 }
 
 function createPost(req, res) {
+    const { user } = req;
     let { name, description, imageUrl, difficultyLevel } = req.body;
     difficultyLevel = +difficultyLevel;
-    const { user } = req;
     cubeModel.create({ name, description, imageUrl, difficultyLevel, creatorId: user._id })
         .then((cube) => {
             res.redirect('/');
@@ -73,8 +74,8 @@ function createPost(req, res) {
 }
 
 function editGet(req, res) {
-    const id = req.params.id;
     const { user } = req;
+    const id = req.params.id;
     cubeModel.findOne({
         _id: id,
         //  creatorId: user._id 
@@ -88,7 +89,7 @@ function editGet(req, res) {
                 { value: 5, title: '5 - Expert', selected: 5 === cube.difficultyLevel },
                 { value: 6, title: '6 - Hardcore', selected: 6 === cube.difficultyLevel }
             ];
-            res.render('editCube.hbs', { cube, options });
+            res.render('editCube', { cube, options, user });
         })
         .catch(err => {
             console.log(err);
@@ -96,7 +97,7 @@ function editGet(req, res) {
         });;
 }
 
-function editPost(req, res) {
+function editPost(req, res, next) {
     const id = req.params.id;
     let { name, description, imageUrl, difficultyLevel } = req.body;
     difficultyLevel = +difficultyLevel;
@@ -104,11 +105,17 @@ function editPost(req, res) {
     cubeModel.updateOne({
         _id: id,
         //  creatorId: user._id
-    }, { name, description, imageUrl, difficultyLevel })
+    }, { name, description, imageUrl, difficultyLevel }, { runValidators: true })
         .then(() => { res.redirect('/'); })
         .catch(err => {
-            console.log(err);
-            res.redirect('/');
+            if (err.name === 'ValidationError') {
+                res.render('editCube', {
+                    cube: { name, description, imageUrl, difficultyLevel },
+                    errors: err.errors,
+                });
+                return;
+            }
+            next(err);
         });;
 }
 
@@ -128,7 +135,7 @@ function deleteGet(req, res) {
                 { value: 5, title: '5 - Expert', selected: 5 === cube.difficultyLevel },
                 { value: 6, title: '6 - Hardcore', selected: 6 === cube.difficultyLevel }
             ];
-            res.render('deleteCube.hbs', { cube, options });
+            res.render('deleteCube', { cube, options });
         })
         .catch(err => {
             console.log(err);

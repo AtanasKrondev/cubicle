@@ -22,7 +22,7 @@ function auth(redirectUnaunthenticted = true) {
             })
             .catch(err => {
                 if (!redirectUnaunthenticted) { next(); return; };
-                if (['token expired', 'blacklisted token', 'jwt must be provided'].includes(err.message)) {
+                if (['token expired', 'blacklisted token', 'jwt must be provided', 'jwt expired'].includes(err.message)) {
                     res.redirect('/login');
                     return;
                 }
