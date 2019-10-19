@@ -5,6 +5,11 @@ const { tokenBlacklist } = require('../models');
 const { validationResult } = require('express-validator');
 
 function registerGet(req, res) {
+    const { user } = req;
+    if (user) {
+        res.redirect('/');
+        return;
+    }
     res.render('register');
 }
 
@@ -40,6 +45,11 @@ function registerPost(req, res, next) {
 };
 
 function loginGet(req, res) {
+    const { user } = req;
+    if (user) {
+        res.redirect('/');
+        return;
+    }
     res.render('login');
 }
 

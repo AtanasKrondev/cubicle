@@ -101,7 +101,7 @@ function editPost(req, res, next) {
     const id = req.params.id;
     let { name, description, imageUrl, difficultyLevel } = req.body;
     difficultyLevel = +difficultyLevel;
-    const { user } = req.user;
+    const { user } = req;
     cubeModel.updateOne({
         _id: id,
         //  creatorId: user._id
@@ -135,7 +135,7 @@ function deleteGet(req, res) {
                 { value: 5, title: '5 - Expert', selected: 5 === cube.difficultyLevel },
                 { value: 6, title: '6 - Hardcore', selected: 6 === cube.difficultyLevel }
             ];
-            res.render('deleteCube', { cube, options });
+            res.render('deleteCube', { cube, options, user });
         })
         .catch(err => {
             console.log(err);
